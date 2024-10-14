@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: capstone-project-9
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: capstone-project-9
+  template:
+    metadata:
+      labels:
+        app: capstone-project-9
+    spec:
+      containers:
+      - name: capstone-project-9
+        image: siddarthan5/capstone-project-9:latest
+        ports:
+        - containerPort: 82

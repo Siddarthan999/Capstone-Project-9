@@ -62,6 +62,15 @@ pipeline {
                 }
             }
         }
+        stage('Deploy to Minikube') {
+            steps {
+                script {
+                    // Deploy the application to Minikube
+                    bat 'kubectl apply -f deployment.yaml'
+                    bat 'kubectl expose deployment capstone-project-9 --type=NodePort --port=82'
+                }
+            }
+        }
     }
 
     post {
@@ -70,7 +79,7 @@ pipeline {
             bat 'docker logout'
         }
         success {
-            echo 'All stages completed successfully, Docker image pushed to DockerHub!'
+            echo 'All stages completed successfully, Docker image pushed to DockerHub and deployed to Minikube!'
         }
         failure {
             echo 'One or more stages failed.'
