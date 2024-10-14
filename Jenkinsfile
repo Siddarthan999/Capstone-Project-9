@@ -9,7 +9,6 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('siddarthan5-dockerhub')
         DOCKER_IMAGE = "siddarthan5/capstone-project-9"
         DOCKER_TAG = "latest"
-        KUBECONFIG = credentials('minikube-kubeconfig')
     }
 
     stages {
@@ -63,10 +62,12 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to Kubernetes') {
+        stage('Deploy to Minikube') {
             steps {
                 script {
+                    // Deploy the application to Minikube
                     bat 'kubectl apply -f deployment.yaml'
+                    bat 'kubectl expose deployment capstone-project-9 --type=NodePort --port=82'
                 }
             }
         }
