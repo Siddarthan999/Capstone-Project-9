@@ -1,3 +1,7 @@
+parameters {
+    booleanParam(name: 'SKIP_LINT', defaultValue: false, description: 'Skip the linting stage?')
+}
+
 pipeline {
     agent any
 
@@ -14,6 +18,9 @@ pipeline {
             }
         }
         stage('Code Quality') {
+            when {
+                expression { !params.SKIP_LINT }
+            }
             steps {
                 bat 'npm run lint'
             }
