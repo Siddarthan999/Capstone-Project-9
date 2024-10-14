@@ -1,7 +1,3 @@
-parameters {
-    booleanParam(name: 'SKIP_LINT', defaultValue: false, description: 'Skip the linting stage?')
-}
-
 pipeline {
     agent any
 
@@ -15,12 +11,12 @@ pipeline {
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Siddarthan999/Capstone-Project-9.git']])
                 bat 'npm install'
                 bat 'npm run build'
+                
+                // Clean up unwanted file
+                bat 'del dist\\assets\\index-BunWj7KW.js'
             }
         }
         stage('Code Quality') {
-            when {
-                expression { !params.SKIP_LINT }
-            }
             steps {
                 bat 'npm run lint'
             }
