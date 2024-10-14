@@ -5,14 +5,24 @@ pipeline {
         nodejs 'node'
     }
 
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('siddarthan5-dockerhub')
+        DOCKER_IMAGE = "siddarthan5/capstone-project-9"
+        DOCKER_TAG = "latest"
+    }
+
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Siddarthan999/Capstone-Project-9.git']])
+            }
+        }
+        stage('Build App') {
+            steps {
                 bat 'npm install'
                 bat 'npm run build'
                 
-                // Clean up unwanted file
+                // Clean up unwanted files
                 bat 'del dist\\assets\\index-BunWj7KW.js'
             }
         }
@@ -28,16 +38,42 @@ pipeline {
                 }
             }
         }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build the Docker image using the Dockerfile in the project root
+                    bat """
+                        docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
+                    """
+                }
+            }
+        }
+        stage('Push Docker Image to DockerHub') {
+            steps {
+                script {
+                    // Log in to DockerHub using credentials stored in Jenkins
+                    bat """
+                        docker login -u ${DOCKERHUB_CREDENTIALS_USR} -p ${DOCKERHUB_CREDENTIALS_PSW}
+                    """
+                    // Push the Docker image to DockerHub
+                    bat """
+                        docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+                    """
+                }
+            }
+        }
     }
+
     post {
         always {
-            echo 'This will always run after completion of all Stages.'
+            echo 'Pipeline completed.'
+            bat 'docker logout'
         }
         success {
-            echo 'All stages completed successfully!'
+            echo 'All stages completed successfully, Docker image pushed to DockerHub!'
         }
         failure {
-            echo 'One or more stages failed!'
+            echo 'One or more stages failed.'
         }
     }
 }
