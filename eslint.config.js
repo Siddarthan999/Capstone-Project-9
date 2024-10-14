@@ -1,7 +1,7 @@
 import globals from "globals";
 import pluginJs from "@eslint/js";
 import pluginReact from "eslint-plugin-react";
-import pluginJest from "eslint-plugin-jest"; // Import the Jest plugin
+import pluginJest from "eslint-plugin-jest";
 
 export default [
   {
@@ -9,14 +9,14 @@ export default [
     languageOptions: {
       globals: {
         ...globals.browser,
-        ...globals.jest, // Add Jest globals here
-        ...globals.node, // Add Node.js globals here
+        ...globals.jest,
+        ...globals.node,
       },
     },
     rules: {
       'react/react-in-jsx-scope': 'off',
-      'jest/no-disabled-tests': 'warn', // Example rule
-      'jest/no-focused-tests': 'error', // Example rule
+      'jest/no-disabled-tests': 'warn',
+      'jest/no-focused-tests': 'error',
     },
     settings: {
       react: {
@@ -24,7 +24,7 @@ export default [
       },
     },
     plugins: {
-      jest: pluginJest, // Define Jest as a plugin
+      jest: pluginJest,
     },
   },
   {

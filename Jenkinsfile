@@ -31,7 +31,7 @@ pipeline {
     }
     post {
         always {
-            echo 'This will always run'
+            echo 'This will always run after completion of all Stages.'
         }
         success {
             echo 'All stages completed successfully!'
